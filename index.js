@@ -41,29 +41,34 @@ let createElementIdAndClass = function(elementType, elementId, elementClass, con
     nodeToAppendTo.appendChild(nodeToAdd);
 };
 
+let removeChildElement = (childToRemove) => {
+    try{
+        childToRemove.target.removeChild(childToRemove.target.lastChild);
+    }catch(err){
+        
+    }
+};
+
 createElementAndId("button", "domButton", "Add Square!");
 let domButton = document.getElementById("domButton");
 let squareId = 1;
-let squareArray = document.getElementsByClassName("squares");
+let deletedElement = false;
+
 domButton.className += "waves-effect waves-light btn-large blue-grey lighten-1";
 
 domButton.addEventListener("click",() => {
-
+    
     createElementIdAndClass("div", squareId, ["squares", " z-depth-3", "waves-effect", "waves-light"]);
-    squareId++;
-    let currentIndex = squareId-2;
-    let currentNode = Array.from(squareArray)[squareId-2];
+
+    let squareArray = document.querySelectorAll(".squares");
+    let currentNode = squareArray.item(squareArray.length-1);
 
     currentNode.addEventListener("mouseover", (stuff) => {
         createElement("p", stuff.target.id, stuff.target);
     });
 
     currentNode.addEventListener("mouseout", (stuff) => {
-        try{
-            stuff.target.removeChild(stuff.target.lastChild);
-        }catch(err){
-            
-        }
+        removeChildElement(stuff);
     });
 
     currentNode.addEventListener("click", (stuff) => {
@@ -72,27 +77,25 @@ domButton.addEventListener("click",() => {
     });
 
     currentNode.addEventListener("mousedown", (stuff) => {
-        try{
-            stuff.target.removeChild(stuff.target.lastChild);
-        }catch (err){
-
-        }
+        removeChildElement(stuff);
     });
 
     currentNode.addEventListener("dblclick", (stuff) => {
             let previousNode = stuff.target.previousSibling;
             let nextNode = stuff.target.nextSibling;
-            try{
-                if(Number(stuff.target.id) % 2 === 0 && nextNode.classList.contains("squares")){
-                    nextNode.parentNode.removeChild(nextNode);
-                }else if(Number(stuff.target.id) % 2 !== 0 && previousNode.classList.contains("squares")){
-                    previousNode.parentNode.removeChild(previousNode);
-                }else {
-                    alert("STOP DELETING MY BROTHERS AND SISTERS YOU PSYCHO!!!");
-                }
-            }catch(err){
+
+            if(Number(stuff.target.id) % 2 === 0 && nextNode !== null){
+                stuff.target.nextElementSibling.remove();
+                squareArray = document.querySelectorAll(".squares");
+                squareId = Number(squareArray.item(squareArray.length-1).id)+1;
+            }else if(Number(stuff.target.id) % 2 !== 0 && previousNode !== null && previousNode.classList.contains("squares")){
+                stuff.target.previousElementSibling.remove();
+                squareArray = document.querySelectorAll(".squares");
+                squareId = Number(squareArray.item(squareArray.length-1).id)+1;
+            }else {
                 alert("STOP DELETING MY BROTHERS AND SISTERS YOU PSYCHO!!!");
             }
-        
     });
+
+    squareId++;
 });

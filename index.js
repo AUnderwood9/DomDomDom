@@ -24,7 +24,6 @@ let createElementAndId = function(elementType, elementId, contentToAppend = "", 
     let nodeToAdd = document.createElement(elementType);
     let nodeText = document.createTextNode(contentToAppend);
     nodeToAdd.id = elementId;
-    console.log(nodeToAdd.id);
     
     nodeToAdd.appendChild(nodeText);
     nodeToAppendTo.appendChild(nodeToAdd);
@@ -42,7 +41,6 @@ let createElementIdAndClass = function(elementType, elementId, elementClass, con
     nodeToAppendTo.appendChild(nodeToAdd);
 };
 
-
 createElementAndId("button", "domButton", "Add Square!");
 let domButton = document.getElementById("domButton");
 let squareId = 1;
@@ -51,7 +49,7 @@ domButton.className += "waves-effect waves-light btn-large blue-grey lighten-1";
 
 domButton.addEventListener("click",() => {
 
-    createElementIdAndClass("div", squareId, ["squares", " z-depth-5", "waves-effect", "waves-light"]);
+    createElementIdAndClass("div", squareId, ["squares", " z-depth-3", "waves-effect", "waves-light"]);
     squareId++;
     let currentIndex = squareId-2;
     let currentNode = Array.from(squareArray)[squareId-2];
@@ -82,17 +80,19 @@ domButton.addEventListener("click",() => {
     });
 
     currentNode.addEventListener("dblclick", (stuff) => {
-        /*if(currentIndex === 0)
-            alert("THE CAKE IS A LIE!!!!!");*/
             let previousNode = stuff.target.previousSibling;
             let nextNode = stuff.target.nextSibling;
-
-        if(Number(stuff.target.id) % 2 === 0){
-            console.log(nextNode);
-            nextNode.parentNode.removeChild(nextNode);
-        }else{
-            console.log(previousNode);
-        }
-        console.log(stuff.target.id);
+            try{
+                if(Number(stuff.target.id) % 2 === 0 && nextNode.classList.contains("squares")){
+                    nextNode.parentNode.removeChild(nextNode);
+                }else if(Number(stuff.target.id) % 2 !== 0 && previousNode.classList.contains("squares")){
+                    previousNode.parentNode.removeChild(previousNode);
+                }else {
+                    alert("STOP DELETING MY BROTHERS AND SISTERS YOU PSYCHO!!!");
+                }
+            }catch(err){
+                alert("STOP DELETING MY BROTHERS AND SISTERS YOU PSYCHO!!!");
+            }
+        
     });
 });
